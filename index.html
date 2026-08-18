@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valnor Cunha | Designer & Developer</title>
+  <meta name="description" content="Portfólio de Valnor Cunha — Designer & Developer. Flutter, TypeScript, Supabase, AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #06060A;
+      --bg-card: #0C0C14;
+      --bg-card-hover: #10101C;
+      --bg-muted: #12121E;
+      --fg: #E8ECF4;
+      --fg-dim: #4A5078;
+      --fg-muted: #6B7394;
+      --accent: #00F0FF;
+      --accent-dim: rgba(0, 240, 255, 0.08);
+      --accent-hover: #33F4FF;
+      --green: #39FF8E;
+      --green-dim: rgba(57, 255, 142, 0.08);
+      --purple: #A855F7;
+      --purple-dim: rgba(168, 85, 247, 0.08);
+      --orange: #FB923C;
+      --orange-dim: rgba(251, 146, 60, 0.08);
+      --border: #14142A;
+      --border-hover: #1E1E3A;
+      --font-heading: 'JetBrains Mono', monospace;
+      --font-body: 'IBM Plex Sans', sans-serif;
+      --glow-sm: 0 0 12px rgba(0, 240, 255, 0.2);
+      --glow-md: 0 0 24px rgba(0, 240, 255, 0.3);
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+
+    /* ── SCROLL PROGRESS ── */
+    .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--green)); z-index: 200; transform-origin: left; transform: scaleX(0); }
+
+    /* ── CURSOR ── */
+    .cursor-dot { position: fixed; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(0,240,255,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: width .3s var(--ease), height .3s var(--ease), border-color .3s; }
+    .cursor-ring.hovering { width: 56px; height: 56px; border-color: var(--accent); }
+    @media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+
+    /* ── GRID BG ── */
+    body::before { content: ''; position: fixed; inset: 0; background: linear-gradient(rgba(0,240,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.025) 1px, transparent 1px); background-size: 64px 64px; pointer-events: none; z-index: 0; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.875rem clamp(1rem, 4vw, 2.5rem); display: flex; justify-content: space-between; align-items: center; background: rgba(6,6,10,0.7); backdrop-filter: blur(20px) saturate(1.2); border-bottom: 1px solid var(--border); transition: background .4s, padding .3s; }
+    nav.scrolled { padding-top: 0.625rem; padding-bottom: 0.625rem; background: rgba(6,6,10,0.92); }
+    .nav-logo { font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem; color: var(--fg); text-decoration: none; display: flex; align-items: center; gap: 0.625rem; }
+    .nav-logo img { height: 40px; width: auto; filter: brightness(1.1); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--font-heading); transition: color .25s; position: relative; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width .3s var(--ease); }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-hamburger { display: none; background: none; border: 1px solid var(--border); color: var(--fg); font-size: 1.25rem; cursor: pointer; padding: 0.5rem; line-height: 1; }
+    .nav-hamburger:hover { border-color: var(--accent); }
+
+    /* Mobile overlay */
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(6,6,10,0.96); backdrop-filter: blur(24px); z-index: 99; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; opacity: 0; transition: opacity .3s; }
+    .mobile-overlay.open { display: flex; opacity: 1; }
+    .mobile-overlay a { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 600; color: var(--fg-muted); text-decoration: none; transition: color .2s; }
+    .mobile-overlay a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem clamp(1rem, 4vw, 2.5rem) 4rem; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-orb { position: absolute; width: min(500px, 80vw); height: min(500px, 80vw); border-radius: 50%; background: radial-gradient(circle, rgba(0,240,255,0.08) 0%, transparent 70%); top: 15%; right: -10%; pointer-events: none; filter: blur(60px); animation: orb-float 8s ease-in-out infinite alternate; }
+    .hero-orb-2 { position: absolute; width: min(350px, 60vw); height: min(350px, 60vw); border-radius: 50%; background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 70%); bottom: 10%; left: -5%; pointer-events: none; filter: blur(50px); animation: orb-float 10s ease-in-out infinite alternate-reverse; }
+    @keyframes orb-float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(30px,-20px) scale(1.1); } }
+
+    .hero-tag { display: inline-flex; align-items: center; gap: 0.625rem; font-family: var(--font-heading); font-size: 0.65rem; font-weight: 500; color: var(--green); text-transform: uppercase; letter-spacing: 0.14em; width: fit-content; margin-bottom: 2.5rem; padding: 0.4rem 1rem; background: var(--green-dim); border: 1px solid rgba(57,255,142,0.15); opacity: 0; }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--green); box-shadow: 0 0 8px rgba(57,255,142,0.6); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; box-shadow: 0 0 8px rgba(57,255,142,0.6); } 50% { opacity: .4; box-shadow: 0 0 2px rgba(57,255,142,0.2); } }
+
+    .hero h1 { font-family: var(--font-heading); font-size: clamp(2.5rem, 8vw, 6.5rem); font-weight: 700; line-height: 1; letter-spacing: -0.04em; margin-bottom: 1.75rem; overflow: hidden; }
+    .hero h1 .line { display: block; overflow: hidden; }
+    .hero h1 .line span { display: inline-block; transform: translateY(110%); }
+    .hero h1 .accent { color: var(--accent); text-shadow: var(--glow-md); }
+
+    .hero-sub { font-size: clamp(0.9rem, 2vw, 1.1rem); color: var(--fg-muted); max-width: 520px; margin-bottom: 2.5rem; line-height: 1.8; opacity: 0; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; }
+
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.6rem; font-family: var(--font-heading); font-size: 0.75rem; font-weight: 500; text-decoration: none; cursor: pointer; border: none; transition: all .3s var(--ease); letter-spacing: .03em; position: relative; overflow: hidden; }
+    .btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); opacity: 0; transition: opacity .3s; }
+    .btn:hover::before { opacity: 1; }
+    .btn-primary { background: var(--accent); color: var(--bg); box-shadow: 0 0 20px rgba(0,240,255,0.2); }
+    .btn-primary:hover { box-shadow: var(--glow-md); transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0) scale(0.98); }
+    .btn-outline { background: transparent; color: var(--fg); border: 1px solid var(--border-hover); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-sm); transform: translateY(-2px); }
+    .btn-outline:active { transform: translateY(0) scale(0.98); }
+
+    /* ── SECTION ── */
+    section { padding: clamp(3rem, 8vw, 7rem) clamp(1rem, 4vw, 2.5rem); max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-label { font-family: var(--font-heading); font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.875rem; opacity: 0; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-hover), transparent); }
+    .section-title { font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.5rem; opacity: 0; }
+    .section-desc { color: var(--fg-muted); max-width: 560px; font-size: clamp(0.875rem, 1.5vw, 0.95rem); line-height: 1.75; opacity: 0; }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 5vw, 4rem); margin-top: 3rem; }
+    .about-text { color: var(--fg-muted); font-size: clamp(0.875rem, 1.5vw, 0.95rem); line-height: 1.85; opacity: 0; }
+    .about-text p + p { margin-top: 1.125rem; }
+    .about-text .hl { color: var(--accent); font-weight: 500; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); padding: clamp(1rem, 2vw, 1.5rem); transition: all .35s var(--ease); opacity: 0; position: relative; overflow: hidden; }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity .3s; }
+    .stat-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-number { font-family: var(--font-heading); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--accent); text-shadow: var(--glow-sm); line-height: 1; }
+    .stat-label { font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-heading); }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; gap: 1.25rem; margin-top: 3rem; }
+    .projects-grid.cols-1 { grid-template-columns: 1fr; }
+    .projects-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+    /* ── FEATURED CARD ── */
+    .project-featured { grid-column: 1 / -1; }
+
+    .project-card { background: var(--bg-card); border: 1px solid var(--border); display: flex; flex-direction: column; transition: all .4s var(--ease); position: relative; overflow: hidden; opacity: 0; cursor: default; }
+    .project-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--green), var(--purple)); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); z-index: 2; }
+    .project-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(0,240,255,0.04), transparent 40%); opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 1; }
+    .project-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 60px rgba(0,240,255,0.03); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-card:hover::after { opacity: 1; }
+
+    /* ── MOCKUP ── */
+    .mockup { position: relative; z-index: 1; overflow: hidden; }
+    .mockup-browser { background: #0A0A12; border-bottom: 1px solid var(--border); }
+    .mockup-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; background: #08080F; border-bottom: 1px solid var(--border); }
+    .mockup-dots { display: flex; gap: 4px; flex-shrink: 0; }
+    .mockup-dots span { width: 7px; height: 7px; border-radius: 50%; }
+    .mockup-dots span:nth-child(1) { background: #FF5F57; }
+    .mockup-dots span:nth-child(2) { background: #FEBC2E; }
+    .mockup-dots span:nth-child(3) { background: #28C840; }
+    .mockup-url { flex: 1; min-width: 0; background: #111119; border: 1px solid var(--border); padding: 0.2rem 0.5rem; font-family: var(--font-heading); font-size: 0.6rem; color: var(--fg-dim); border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mockup-body { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0; position: relative; overflow: hidden; background: #0A0A12; }
+    .mockup-body img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform .6s var(--ease); }
+    .project-card:hover .mockup-body img { transform: scale(1.03); }
+
+    /* ── CARD BODY ── */
+    .project-body { padding: 1.25rem clamp(1rem, 3vw, 1.5rem); display: flex; flex-direction: column; gap: 0.75rem; flex: 1; position: relative; z-index: 1; }
+    .project-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
+    .project-icon { width: 36px; height: 36px; background: var(--accent-dim); border: 1px solid rgba(0,240,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--accent); transition: all .3s; flex-shrink: 0; }
+    .project-card:hover .project-icon { box-shadow: var(--glow-sm); border-color: rgba(0,240,255,0.3); }
+    .project-badge { font-family: var(--font-heading); font-size: 0.55rem; font-weight: 500; padding: 0.2rem 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+    .badge-green { color: var(--green); background: var(--green-dim); border: 1px solid rgba(57,255,142,0.15); }
+    .badge-purple { color: var(--purple); background: var(--purple-dim); border: 1px solid rgba(168,85,247,0.15); }
+    .badge-orange { color: var(--orange); background: var(--orange-dim); border: 1px solid rgba(251,146,60,0.15); }
+    .badge-accent { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(0,240,255,0.15); }
+    .project-name { font-family: var(--font-heading); font-size: clamp(0.9rem, 2vw, 1.05rem); font-weight: 600; letter-spacing: -0.01em; }
+    .project-desc { color: var(--fg-muted); font-size: clamp(0.8rem, 1.3vw, 0.85rem); line-height: 1.65; flex: 1; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.25rem; }
+    .tag { background: var(--bg-muted); border: 1px solid var(--border); padding: 0.2rem 0.5rem; font-family: var(--font-heading); font-size: 0.55rem; font-weight: 500; color: var(--fg-dim); text-transform: uppercase; letter-spacing: .05em; transition: all .2s; }
+    .project-card:hover .tag { border-color: var(--border-hover); color: var(--fg-muted); }
+    .project-live { display: inline-flex; align-items: center; gap: 0.375rem; margin-top: 0.375rem; color: var(--accent); text-decoration: none; font-family: var(--font-heading); font-size: 0.68rem; font-weight: 500; transition: all .25s; width: fit-content; padding: 0.375rem 0; opacity: 0; transform: translateY(4px); }
+    .project-card:hover .project-live { opacity: 1; transform: translateY(0); }
+    .project-live:hover { text-shadow: var(--glow-sm); }
+
+    /* ── MARQUEE ── */
+    .marquee-wrapper { overflow: hidden; margin-top: 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.5rem 0; opacity: 0; }
+    .marquee-track { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .marquee-item { display: flex; align-items: center; gap: 0.625rem; padding: 0 2.5rem; font-family: var(--font-heading); font-size: 0.8rem; font-weight: 500; color: var(--fg-dim); white-space: nowrap; transition: color .3s; }
+    .marquee-item:hover { color: var(--accent); }
+    .marquee-item i { font-size: 1.1rem; color: var(--accent); opacity: .5; transition: opacity .3s; }
+    .marquee-item:hover i { opacity: 1; }
+    .marquee-sep { color: var(--border-hover); font-size: 0.5rem; }
+
+    /* ── TECH GRID ── */
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.75rem; margin-top: 3rem; }
+    .tech-item { background: var(--bg-card); border: 1px solid var(--border); padding: clamp(0.875rem, 2vw, 1.25rem) 0.625rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; transition: all .35s var(--ease); cursor: default; opacity: 0; }
+    .tech-item:hover { border-color: var(--accent); background: var(--accent-dim); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,240,255,0.03); }
+    .tech-item i { font-size: 1.4rem; color: var(--accent); opacity: .7; transition: all .3s; }
+    .tech-item:hover i { opacity: 1; text-shadow: var(--glow-sm); }
+    .tech-item span { font-family: var(--font-heading); font-size: 0.6rem; font-weight: 500; color: var(--fg-dim); transition: color .3s; }
+    .tech-item:hover span { color: var(--fg-muted); }
+
+    /* ── CONTACT ── */
+    .contact-section { text-align: center; padding: clamp(3rem, 8vw, 8rem) clamp(1rem, 4vw, 2.5rem); position: relative; }
+    .contact-links { display: flex; justify-content: center; gap: 1rem; margin-top: 3rem; flex-wrap: wrap; }
+    .contact-link { display: flex; align-items: center; gap: 0.625rem; background: var(--bg-card); border: 1px solid var(--border); padding: 0.75rem 1.25rem; color: var(--fg); text-decoration: none; font-family: var(--font-heading); font-weight: 500; font-size: 0.75rem; transition: all .35s var(--ease); opacity: 0; }
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-sm); transform: translateY(-3px); }
+    .contact-link:active { transform: translateY(0) scale(0.98); }
+    .contact-link i { font-size: 1.1rem; color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 1.5rem clamp(1rem, 4vw, 2.5rem); display: flex; justify-content: space-between; align-items: center; color: var(--fg-dim); font-size: 0.7rem; font-family: var(--font-heading); letter-spacing: 0.04em; position: relative; z-index: 1; }
+    footer a { color: var(--fg-muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+      .hero { padding-top: 6rem; min-height: auto; padding-bottom: 3rem; }
+      .hero h1 { font-size: clamp(2.25rem, 10vw, 3.5rem); }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .projects-grid.cols-2 { grid-template-columns: 1fr; }
+      .tech-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 0.5rem; }
+      .contact-links { flex-direction: column; align-items: stretch; }
+      .contact-link { justify-content: center; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .tech-grid { grid-template-columns: repeat(3, 1fr); }
+      .beit-stats { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── FOCUS ── */
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+      .hero h1 .line span { transform: none; }
+      .hero-tag, .hero-sub, .hero-actions, .section-label, .section-title, .section-desc, .about-text, .stat-card, .project-card, .tech-item, .contact-link, .marquee-wrapper { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav id="mainNav">
+    <a href="#" class="nav-logo"><img src="logo_branco.png" alt="Mancha Designer" onerror="this.style.display='none'"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">Sobre</a></li>
+      <li><a href="#projects">Projetos</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contact">Contato</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu"><i class="ph ph-list"></i></button>
+  </nav>
+  <div class="mobile-overlay" id="mobileOverlay">
+    <a href="#about">Sobre</a>
+    <a href="#projects">Projetos</a>
+    <a href="#stack">Stack</a>
+    <a href="#contact">Contato</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-orb"></div>
+    <div class="hero-orb-2"></div>
+    <div class="hero-tag" id="heroTag">Disponivel para projetos</div>
+    <h1 id="heroTitle">
+      <span class="line"><span>VALNOR</span></span>
+      <span class="line"><span class="accent">CUNHA</span></span>
+    </h1>
+    <p class="hero-sub" id="heroSub">Designer & Developer. Construo interfaces que conectam pessoas a solucoes — do conceito ao codigo, do mobile ao web.</p>
+    <div class="hero-actions" id="heroActions">
+      <a href="#projects" class="btn btn-primary"><i class="ph ph-folder-open"></i> Ver Projetos</a>
+      <a href="#contact" class="btn btn-outline"><i class="ph ph-envelope-simple"></i> Contato</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">01 / Sobre</div>
+    <h2 class="section-title">Criando do conceito<br>ao deploy.</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Sou <span class="hl">Valnor Cunha</span>, designer e desenvolvedor. Trabalho com <span class="hl">TypeScript</span>, <span class="hl">JavaScript</span>, <span class="hl">React</span> e <span class="hl">Supabase</span> para construir aplicacoes completas — do banco de dados a interface.</p>
+        <p>Meu foco esta em criar experiencias digitais que sejam visualmente impactantes e funcionalmente solidas. Cada projeto e uma oportunidade de resolver problemas reais com tecnologia e design.</p>
+        <p>Quando nao estou codando, estou explorando novas ferramentas de IA e refinando meu workflow criativo.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Projetos</div></div>
+        <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Plataformas</div></div>
+        <div class="stat-card"><div class="stat-number">6+</div><div class="stat-label">Tecnologias</div></div>
+        <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">Frameworks</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">02 / Projetos</div>
+    <h2 class="section-title">Sites & sistemas<br>que construi.</h2>
+    <p class="section-desc">De landing pages a CRM com inteligencia artificial — cada projeto e um desafio diferente resolvido com codigo e design.</p>
+
+    <!-- FEATURED: BEIT CRM -->
+    <div class="projects-grid cols-1" style="margin-top:3rem;">
+      <div class="project-card project-featured">
+        <div class="mockup mockup-browser">
+          <div class="mockup-bar">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">manchadesigner.com</div>
+          </div>
+          <div class="mockup-body" style="height:320px;">
+            <img src="beit-crm.png" alt="Beit CRM Dashboard" loading="lazy">
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-top">
+            <div class="project-icon" style="background:rgba(0,240,255,0.1);"><i class="ph ph-buildings"></i></div>
+            <div class="project-badge badge-accent">Produto Principal</div>
+          </div>
+          <div class="project-name">Beit — CRM Imobiliario</div>
+          <div class="project-desc">CRM completo com AI Growth Engine, vitrine publica, pipeline Kanban, gestao de imoveis, visitas, propostas, financeiro e white-label. Multi-empresa com IA nativa que identifica oportunidades perdidas.</div>
+          <div class="project-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">React</span>
+            <span class="tag">Supabase</span>
+            <span class="tag">AI</span>
+            <span class="tag">Multi-empresa</span>
+            <span class="tag">White-label</span>
+          </div>
+          <a href="https://manchadesigner.com" target="_blank" rel="noopener" class="project-live" style="opacity:1;transform:none;"><i class="ph ph-arrow-square-out"></i> Ver demo ao vivo</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTHER PROJECTS -->
+    <div class="projects-grid cols-2" style="margin-top:1.25rem;">
+
+      <!-- J. SOLAR -->
+      <div class="project-card">
+        <div class="mockup mockup-browser">
+          <div class="mockup-bar">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">jsolar.com.br</div>
+          </div>
+          <div class="mockup-body" style="height:200px;">
+            <img src="j-solar.png" alt="J. Solar Landing Page" loading="lazy">
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-top">
+            <div class="project-icon" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.15);color:#FBBF24;"><i class="ph ph-sun-horizon"></i></div>
+            <div class="project-badge badge-orange">Landing Page</div>
+          </div>
+          <div class="project-name">J. Solar</div>
+          <div class="project-desc">Landing page completa para empresa de energia solar com simulador de economia, depoimentos, FAQ e CTA integrado ao WhatsApp.</div>
+          <div class="project-tags">
+            <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span>
+          </div>
+          <a href="https://www.jsolar.com.br" target="_blank" rel="noopener" class="project-live"><i class="ph ph-arrow-square-out"></i> Ver site</a>
+        </div>
+      </div>
+
+      <!-- ANDRE MAGGI BOFF -->
+      <div class="project-card">
+        <div class="mockup mockup-browser">
+          <div class="mockup-bar">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">andremaggiboff.com.br</div>
+          </div>
+          <div class="mockup-body" style="height:200px;">
+            <img src="andre-maggi.png" alt="André Maggi Boff Site" loading="lazy">
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-top">
+            <div class="project-icon" style="background:var(--purple-dim);border-color:rgba(168,85,247,0.15);color:var(--purple);"><i class="ph ph-tooth"></i></div>
+            <div class="project-badge badge-purple">Site Institucional</div>
+          </div>
+          <div class="project-name">Andre Maggi Boff</div>
+          <div class="project-desc">Site completo para consultorio odontologico com galeria antes/depois, depoimentos, diferenciais e agendamento via WhatsApp.</div>
+          <div class="project-tags">
+            <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">UI/UX</span>
+          </div>
+          <a href="https://www.andremaggiboff.com.br" target="_blank" rel="noopener" class="project-live"><i class="ph ph-arrow-square-out"></i> Ver site</a>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrapper">
+    <div class="marquee-track">
+      <div class="marquee-item"><i class="ph ph-code"></i> TypeScript</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-code"></i> JavaScript</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-squares-four"></i> React</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-database"></i> Supabase</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-robot"></i> AI / Gemini</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-cloud"></i> Vercel</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-file-code"></i> HTML</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-palette"></i> CSS</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-paint-brush"></i> UI/UX</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-code"></i> TypeScript</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-code"></i> JavaScript</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-squares-four"></i> React</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-database"></i> Supabase</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-robot"></i> AI / Gemini</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-cloud"></i> Vercel</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-file-code"></i> HTML</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-palette"></i> CSS</div><div class="marquee-sep">&#x2022;</div>
+      <div class="marquee-item"><i class="ph ph-paint-brush"></i> UI/UX</div><div class="marquee-sep">&#x2022;</div>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="section-label">03 / Stack</div>
+    <h2 class="section-title">Tecnologias que<br>uso no dia a dia.</h2>
+    <div class="tech-grid">
+      <div class="tech-item"><i class="ph ph-code"></i><span>TypeScript</span></div>
+      <div class="tech-item"><i class="ph ph-code"></i><span>JavaScript</span></div>
+      <div class="tech-item"><i class="ph ph-squares-four"></i><span>React</span></div>
+      <div class="tech-item"><i class="ph ph-database"></i><span>Supabase</span></div>
+      <div class="tech-item"><i class="ph ph-robot"></i><span>AI / Gemini</span></div>
+      <div class="tech-item"><i class="ph ph-cloud"></i><span>Vercel</span></div>
+      <div class="tech-item"><i class="ph ph-file-code"></i><span>HTML</span></div>
+      <div class="tech-item"><i class="ph ph-palette"></i><span>CSS</span></div>
+      <div class="tech-item"><i class="ph ph-paint-brush"></i><span>UI/UX</span></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="hero-orb" style="top:50%;left:50%;right:auto;transform:translate(-50%,-50%);"></div>
+    <div class="section-label" style="justify-content:center;">04 / Contato</div>
+    <h2 class="section-title">Vamos construir<br>algo juntos?</h2>
+    <p class="section-desc" style="margin:0 auto;">Estou sempre aberto a novos projetos e colaboracoes. Entre em contato.</p>
+    <div class="contact-links">
+      <a href="mailto:contato@mancha.design" class="contact-link"><i class="ph ph-envelope-simple"></i> Email</a>
+      <a href="https://linkedin.com" target="_blank" rel="noopener" class="contact-link"><i class="ph ph-linkedin-logo"></i> LinkedIn</a>
+      <a href="https://instagram.com/manchadesigner" target="_blank" rel="noopener" class="contact-link"><i class="ph ph-instagram-logo"></i> Instagram</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Valnor Cunha</p>
+    <a href="#">@manchadesigner</a>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+    const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!rm && window.matchMedia('(pointer: fine)').matches) {
+      const d = document.getElementById('cursorDot'), r = document.getElementById('cursorRing');
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; d.style.left = mx - 3 + 'px'; d.style.top = my - 3 + 'px'; });
+      (function f() { rx += (mx - rx) * .12; ry += (my - ry) * .12; r.style.left = rx - 18 + 'px'; r.style.top = ry - 18 + 'px'; requestAnimationFrame(f); })();
+      document.querySelectorAll('a,button,.project-card,.tech-item').forEach(el => { el.addEventListener('mouseenter', () => r.classList.add('hovering')); el.addEventListener('mouseleave', () => r.classList.remove('hovering')); });
+    }
+
+    window.addEventListener('scroll', () => document.getElementById('scrollProgress').style.transform = `scaleX(${document.documentElement.scrollTop / (document.documentElement.scrollHeight - window.innerHeight)})`);
+    window.addEventListener('scroll', () => document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60));
+
+    const h = document.getElementById('hamburger'), o = document.getElementById('mobileOverlay');
+    h.addEventListener('click', () => { o.classList.toggle('open'); h.querySelector('i').className = o.classList.contains('open') ? 'ph ph-x' : 'ph ph-list'; });
+    o.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { o.classList.remove('open'); h.querySelector('i').className = 'ph ph-list'; }));
+
+    document.querySelectorAll('.project-card').forEach(c => c.addEventListener('mousemove', e => { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); }));
+
+    if (!rm) {
+      const tl = gsap.timeline({ delay: .3 });
+      tl.to('#heroTag', { opacity: 1, duration: .6, ease: 'power2.out' })
+        .to('#heroTitle .line span', { y: 0, duration: .8, stagger: .12, ease: 'expo.out' }, '-=.3')
+        .to('#heroSub', { opacity: 1, duration: .6, ease: 'power2.out' }, '-=.4')
+        .to('#heroActions', { opacity: 1, duration: .5, ease: 'power2.out' }, '-=.3');
+
+      gsap.utils.toArray('.section-label,.section-title,.section-desc').forEach(el => gsap.to(el, { opacity: 1, y: 0, duration: .6, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
+      gsap.to('.about-text', { opacity: 1, y: 0, duration: .7, ease: 'power2.out', scrollTrigger: { trigger: '.about-text', start: 'top 85%' } });
+      gsap.to('.stat-card', { opacity: 1, y: 0, duration: .5, stagger: .1, ease: 'power2.out', scrollTrigger: { trigger: '.stats-grid', start: 'top 85%' } });
+      gsap.to('.project-card', { opacity: 1, y: 0, duration: .6, stagger: .08, ease: 'power2.out', scrollTrigger: { trigger: '.projects-grid', start: 'top 85%' } });
+      gsap.to('.marquee-wrapper', { opacity: 1, duration: .8, scrollTrigger: { trigger: '.marquee-wrapper', start: 'top 90%' } });
+      gsap.to('.tech-item', { opacity: 1, y: 0, duration: .4, stagger: .04, ease: 'power2.out', scrollTrigger: { trigger: '.tech-grid', start: 'top 85%' } });
+      gsap.to('.contact-link', { opacity: 1, y: 0, duration: .5, stagger: .1, ease: 'power2.out', scrollTrigger: { trigger: '.contact-links', start: 'top 88%' } });
+    } else {
+      document.querySelectorAll('.hero-tag,.hero-sub,.hero-actions,.section-label,.section-title,.section-desc,.about-text,.stat-card,.project-card,.marquee-wrapper,.tech-item,.contact-link').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+      document.querySelectorAll('#heroTitle .line span').forEach(el => el.style.transform = 'none');
+    }
+  </script>
+</body>
+</html>
