@@ -1,0 +1,29 @@
+# Mancha Designer
+
+> Portfólio e serviços de Valnor Cunha, designer e desenvolvedor baseado em Sombrio, Santa Catarina, Brasil. Trabalha com TypeScript, JavaScript, React, Supabase, HTML, CSS, UI/UX e IA aplicada, do conceito ao deploy.
+
+## Páginas
+
+- [Homepage](https://manchadesigner.com/): apresentação, projetos, stack e contato.
+- [Sobre](https://manchadesigner.com/about.html): quem é Valnor Cunha, experiência e forma de trabalho.
+- [Contato](https://manchadesigner.com/contact.html): email e perfis oficiais para novos projetos.
+- [Termos de uso](https://manchadesigner.com/terms.html): condições de uso do site e dos conteúdos.
+- [Versão Markdown da homepage](https://manchadesigner.com/index.md): mesma informação da homepage em texto simples, para agentes.
+
+## Projetos
+
+- [Beit — CRM Imobiliário](https://beit-imovel.vercel.app/): CRM com IA, pipeline Kanban, gestão de imóveis, visitas, propostas e financeiro.
+- [J. Solar](https://www.jsolar.com.br): landing page de energia solar com simulador de economia e CTA via WhatsApp.
+- [André Maggi Boff](https://www.andremaggiboff.com.br): site institucional odontológico com galeria e agendamento.
+- [Caio Cesar Studio](https://www.caiocesarstudio.com): site para estúdio de arquitetura com portfólio e contato.
+- [Marina Kras](https://www.marinakras.com.br): site institucional de clínica odontológica com tratamentos e agendamento.
+
+## Contato
+
+- Email: contato@mancha.design
+- LinkedIn: https://www.linkedin.com/in/valnor-cunha-0b492b337
+- Instagram: https://www.instagram.com/manchadesigner
+
+## Política de conteúdo
+
+Uso para busca permitido. Treinamento de modelos de IA não permitido, conforme `Content-Signal: search=yes, ai-train=no` em `/robots.txt`.

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/mcp-server-card/v1.json",
+  "version": "1.0",
+  "protocolVersion": "2025-06-18",
+  "serverInfo": {
+    "name": "manchadesigner-webmcp",
+    "title": "Mancha Designer WebMCP",
+    "version": "1.0.0"
+  },
+  "name": "com.manchadesigner/webmcp",
+  "title": "Mancha Designer WebMCP",
+  "version": "1.0.0",
+  "description": "Ferramentas WebMCP e recursos públicos do portfólio Mancha Designer: resumo, projetos e contato.",
+  "websiteUrl": "https://manchadesigner.com/",
+  "transport": {
+    "type": "streamable-http",
+    "endpoint": "https://manchadesigner.com/mcp.json"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://manchadesigner.com/mcp.json",
+      "supportedProtocolVersions": ["2025-06-18"]
+    }
+  ],
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    },
+    "resources": {
+      "subscribe": false,
+      "listChanged": false
+    }
+  },
+  "tools": [
+    {
+      "name": "get_portfolio_summary",
+      "title": "Resumo do portfólio",
+      "description": "Retorna um resumo textual sobre Mancha Designer, Valnor Cunha, serviços e stack.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_projects",
+      "title": "Listar projetos",
+      "description": "Lista os projetos apresentados no portfólio com seus links públicos.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_contact_info",
+      "title": "Informações de contato",
+      "description": "Retorna email e perfis oficiais de Valnor Cunha para contato.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "llms_txt",
+      "title": "Guia para agentes",
+      "uri": "https://manchadesigner.com/llms.txt",
+      "description": "Resumo do site e links para as páginas principais.",
+      "mimeType": "text/plain"
+    },
+    {
+      "name": "homepage_markdown",
+      "title": "Homepage em Markdown",
+      "uri": "https://manchadesigner.com/index.md",
+      "description": "Conteúdo da homepage em Markdown, com baixo custo de tokens.",
+      "mimeType": "text/markdown"
+    }
+  ],
+  "authentication": {
+    "required": false,
+    "schemes": []
+  },
+  "instructions": "As ferramentas Interativas são registradas na homepage via WebMCP; este arquivo e /mcp.json descrevem os recursos públicos disponíveis."
+}

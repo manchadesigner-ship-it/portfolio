@@ -1,0 +1,48 @@
+{
+  "name": "manchadesigner-webmcp",
+  "version": "1.0.0",
+  "description": "Manifesto público das ferramentas WebMCP registradas na homepage do Mancha Designer.",
+  "homepage": "https://manchadesigner.com/",
+  "capabilities": {
+    "tools": true,
+    "resources": true
+  },
+  "tools": [
+    {
+      "name": "get_portfolio_summary",
+      "description": "Retorna um resumo textual sobre Mancha Designer, Valnor Cunha, serviços e stack.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "list_projects",
+      "description": "Lista os projetos apresentados no portfólio com seus links públicos.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "get_contact_info",
+      "description": "Retorna email e perfis oficiais de Valnor Cunha para contato.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ],
+  "resources": [
+    {
+      "name": "llms_txt",
+      "uri": "https://manchadesigner.com/llms.txt",
+      "mimeType": "text/plain"
+    },
+    {
+      "name": "homepage_markdown",
+      "uri": "https://manchadesigner.com/index.md",
+      "mimeType": "text/markdown"
+    }
+  ]
+}
