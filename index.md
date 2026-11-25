@@ -28,6 +28,7 @@ TypeScript, JavaScript, React, Supabase, IA/Gemini, Vercel, HTML, CSS, UI/UX.
 ## Contato
 
 - Email: contato@mancha.design
+- Telefone: (48) 99973-2338
 - LinkedIn: https://www.linkedin.com/in/valnor-cunha-0b492b337
 - Instagram: https://www.instagram.com/manchadesigner
 
