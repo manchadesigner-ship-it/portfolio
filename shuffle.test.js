@@ -65,3 +65,19 @@ test('forceMotion preview runs even with reduced motion', async () => {
     await browser.close();
   }
 });
+
+test('mobile hero title uses a lighter font weight', async () => {
+  const browser = await launchBrowser();
+
+  try {
+    const page = await browser.newPage();
+    await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+    const file = path.resolve(__dirname, 'index.html').replace(/\\/g, '/');
+    await page.goto(`file:///${file}`, { waitUntil: 'load' });
+    const weight = await page.$eval('.hero h1', el => getComputedStyle(el).fontWeight);
+    assert.equal(weight, '400');
+  } finally {
+    await browser.close();
+  }
+});
