@@ -4,6 +4,8 @@
   "private": true,
   "description": "Portfólio de Valnor Cunha (Mancha Designer)",
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.1",
     "puppeteer": "^25.19.0"
   }
 }
